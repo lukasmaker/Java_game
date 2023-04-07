@@ -1,12 +1,14 @@
 package wisniowa.tc.players;
 
 import wisniowa.tc.Constants;
+import wisniowa.tc.players.projectiles.Arrow;
+import wisniowa.tc.players.projectiles.Spell;
 
 import javax.swing.*;
 import java.util.ArrayList;
 
 public class Mage extends Player {
-    private static ArrayList<Arrow> spells = new ArrayList<>();
+    private ArrayList<Spell> spells = new ArrayList<>();
 
     public Mage(String name, int x, int y, int goLeftKey, int goRightKey, int goUpKey, int goDownKey, int attackLeftKey, int attackRightKey) {
         super(name, x, y, goLeftKey, goRightKey, goUpKey, goDownKey, attackLeftKey, attackRightKey);
@@ -70,7 +72,8 @@ public class Mage extends Player {
     public void attackLeft() {
         int i = x;
         if (i > 0) {
-            Arrow arrow = new Arrow(x + 40, y + 80, "left");
+            Spell spell = new Spell(x, y, "left");
+            spells.add(spell);
             System.out.println("Left Mage missile");
         }
     }
@@ -79,12 +82,13 @@ public class Mage extends Player {
     public void attackRight() {
         int i = x;
         if (i < Constants.MAX_RIGHT_POSITION / Constants.CHARACTER_IMG_WIDTH) {
-            Arrow arrow = new Arrow(x - 40, y - 80, "rigth");
+            Spell spell = new Spell(x , y, "right");
+            spells.add(spell);
             System.out.println("Right Mage missile");
         }
     }
 
-    public static ArrayList<Arrow> getSpells() {
+    public ArrayList<Spell> getSpells() {
         return spells;
     }
 }

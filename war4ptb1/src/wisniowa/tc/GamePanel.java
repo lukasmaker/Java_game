@@ -1,8 +1,8 @@
 package wisniowa.tc;
 
-import wisniowa.tc.players.Archer;
-import wisniowa.tc.players.Player;
-import wisniowa.tc.players.Arrow;
+import wisniowa.tc.players.*;
+import wisniowa.tc.players.projectiles.Arrow;
+import wisniowa.tc.players.projectiles.Spell;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,15 +11,11 @@ import java.awt.event.KeyEvent;
 import java.util.Iterator;
 
 public class GamePanel extends JPanel {
-    public int x = 100;
-    public int y = 300;
-    private Team team;
     Player[] players;
 
 
     public GamePanel(Team team) {
-        this.team = team;
-        this.players = this.team.getTeamMembers();
+        this.players = team.getTeamMembers();
         setFocusable(true);
         addKeyListener(new HeroesKeyListener2());
     }
@@ -33,32 +29,42 @@ public class GamePanel extends JPanel {
                     player.getY() * Constants.CHARACTER_IMG_HEIGHT,
                     this
             );
-            if (player.getClass().getSimpleName().equals("Archer")) {
-                Iterator<Arrow> iter = Archer.getArrows().iterator();
+            if (player instanceof Archer archer) {
+                Iterator<Arrow> iter = archer.getArrows().iterator();
                 while (iter.hasNext()) {
                     Arrow arrow = iter.next();
-                    System.out.println(arrow);
                     if (arrow.getX() > Constants.MAX_RIGHT_PLACE || arrow.getX() < 0) {
                         iter.remove();
-                        repaint();
-                        break;
+                        continue;
                     }
+                    arrow.setX();
                     g.drawImage(
                             arrow.getBaseImage(),
                             arrow.getX() * Constants.CHARACTER_IMG_WIDTH,
                             arrow.getY() * Constants.CHARACTER_IMG_HEIGHT,
                             this
                     );
-                    if (arrow.getDirection().equals("left")) {
-                        arrow.setX(arrow.getX() - 1);
-                    } else if (arrow.getDirection().equals("right")) {
-                        arrow.setX(arrow.getX() + 1);
+                }
+            }
+            if (player instanceof Mage mage) {
+                Iterator<Spell> iter = mage.getSpells().iterator();
+                while (iter.hasNext()) {
+                    Spell spell = iter.next();
+                    if (spell.getX() > Constants.MAX_RIGHT_PLACE || spell.getX() < 0) {
+                        iter.remove();
+                        continue;
                     }
+                    spell.setX();
+                    g.drawImage(
+                            spell.getBaseImage(),
+                            spell.getX() * Constants.CHARACTER_IMG_WIDTH,
+                            spell.getY() * Constants.CHARACTER_IMG_HEIGHT,
+                            this
+                    );
                 }
             }
         }
     }
-
 
 
         //g.drawImage(tmpImage, x, y, this);
@@ -76,15 +82,7 @@ public class GamePanel extends JPanel {
         public void keyPressed(KeyEvent e) {
             super.keyPressed(e);
             int key = e.getKeyCode();
-            /*if (key == KeyEvent.VK_SHIFT) {
-                if (e.getKeyLocation() == 2) {
-                    System.out.println("Lewy SHIFT");
-                } else {
-                    System.out.println("Prawy SHIFT");
-                }
-            }*/
-
-            for (Player player: players) {
+            for (Player player : players) {
                 if (player.getGoLeftKey() == key) {
                     player.tryGoLeft();
                     //player.setX(player.getX() - Constants.CHARACTER_IMG_WIDTH);

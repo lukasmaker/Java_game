@@ -30,7 +30,7 @@ public class Main {
                         KeyEvent.VK_1,
                         KeyEvent.VK_2
                 ),
-                new Mage(
+                new Archer(
                         "Gandalf",
                         4,
                         4,
